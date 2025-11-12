@@ -1,8 +1,7 @@
-/* BLOCO 1: LIMPAR O BANCO */
 MATCH (n)
 DETACH DELETE n;
 
-/* BLOCO 2: CRIAR AS CONSTRAINTS (SINTAXE MODERNA) */
+/* CRIAR AS CONSTRAINTS (SINTAXE MODERNA) */
 CREATE CONSTRAINT IF NOT EXISTS FOR (u:User) REQUIRE u.id IS UNIQUE;
 CREATE CONSTRAINT IF NOT EXISTS FOR (m:Movie) REQUIRE m.title IS UNIQUE;
 CREATE CONSTRAINT IF NOT EXISTS FOR (s:Serie) REQUIRE s.title IS UNIQUE;
@@ -10,14 +9,13 @@ CREATE CONSTRAINT IF NOT EXISTS FOR (a:Actor) REQUIRE a.name IS UNIQUE;
 CREATE CONSTRAINT IF NOT EXISTS FOR (d:Director) REQUIRE d.name IS UNIQUE;
 CREATE CONSTRAINT IF NOT EXISTS FOR (g:Genre) REQUIRE g.name IS UNIQUE;
 
-/* BLOCO 3: CRIAR NÓS (ATORES, DIRETORES, GÊNEROS) */
-/* Gêneros */
+/* CRIAR NÓS (ATORES, DIRETORES, GÊNEROS) */
 CREATE (g_scifi:Genre {name: 'Ficção Científica'});
 CREATE (g_action:Genre {name: 'Ação'});
 CREATE (g_drama:Genre {name: 'Drama'});
 CREATE (g_fantasy:Genre {name: 'Fantasia'});
 CREATE (g_comedy:Genre {name: 'Comédia'});
-/* Atores (com seu nome) */
+
 CREATE (a_keanu:Actor {name: 'Yanca Silva'});
 CREATE (a_harrison:Actor {name: 'Harrison Ford'});
 CREATE (a_tim:Actor {name: 'Timothée Chalamet'});
@@ -25,21 +23,21 @@ CREATE (a_zendaya:Actor {name: 'Yanca Ribeiro'});
 CREATE (a_elba:Actor {name: 'Idris Elba'});
 CREATE (a_gomez:Actor {name: 'Yanca Rivska'});
 CREATE (a_aniston:Actor {name: 'Jennifer Aniston'});
-/* Diretores */
+
 CREATE (d_wachowski:Director {name: 'Lana Wachowski'});
 CREATE (d_villeneuve:Director {name: 'Denis Villeneuve'});
 CREATE (d_nolan:Director {name: 'Christopher Nolan'});
 CREATE (d_duffer:Director {name: 'Duffer Brothers'});
 CREATE (d_burton:Director {name: 'Tim Burton'});
 
-/* BLOCO 4: POPULAR O BANCO (NOMES FICTÍCIOS) */
-/* Filmes (5) */
+/* Filmes */
+
 CREATE (m_matrix:Movie {title: 'O Código Sombrio'});
 CREATE (m_dune:Movie {title: 'Areias do Silêncio'});
 CREATE (m_interstellar:Movie {title: 'Poeira de Estrelas'});
 CREATE (m_bladerunner:Movie {title: 'Caçador de Sonhos'});
 CREATE (m_inception:Movie {title: 'O Arquiteto'});
-/* Séries (8) */
+/* Séries */
 CREATE (s_stranger:Serie {title: 'Coisas Ocultas'});
 CREATE (s_wednesday:Serie {title: 'A Garota de Preto'});
 CREATE (s_luther:Serie {title: 'O Detetive da Chuva'});
@@ -49,12 +47,10 @@ CREATE (s_horizonte:Serie {title: 'O Último Horizonte'});
 CREATE (s_caos:Serie {title: 'Agentes do Caos'});
 CREATE (s_coruja:Serie {title: 'A Trilha da Coruja'});
 
-/* BLOCO 5: POPULAR O BANCO (10 USUÁRIOS) */
+/* 10 USUÁRIOS) */
 UNWIND range(1, 10) AS i
 CREATE (u:User {id: 'user' + i, name: 'Usuário ' + i});
 
-/* BLOCO 6: CRIAR OS RELACIONAMENTOS (SEM WATCHED) */
-/* --- Relacionamentos de Filmes --- */
 MATCH (m:Movie {title: 'O Código Sombrio'}), (d:Director {name: 'Lana Wachowski'}) CREATE (d)-[:DIRECTED]->(m);
 MATCH (m:Movie {title: 'O Código Sombrio'}), (a:Actor {name: 'Yanca Silva'}) CREATE (a)-[:ACTED_IN]->(m);
 MATCH (m:Movie {title: 'O Código Sombrio'}), (g:Genre {name: 'Ficção Científica'}) CREATE (m)-[:IN_GENRE]->(g);
@@ -74,7 +70,7 @@ MATCH (m:Movie {title: 'Caçador de Sonhos'}), (g:Genre {name: 'Ficção Cientí
 MATCH (m:Movie {title: 'O Arquiteto'}), (d:Director {name: 'Christopher Nolan'}) CREATE (d)-[:DIRECTED]->(m);
 MATCH (m:Movie {title: 'O Arquiteto'}), (g:Genre {name: 'Ação'}) CREATE (m)-[:IN_GENRE]->(g);
 
-/* --- Relacionamentos de Séries --- */
+
 MATCH (s:Serie {title: 'Coisas Ocultas'}), (d:Director {name: 'Duffer Brothers'}) CREATE (d)-[:DIRECTED]->(s);
 MATCH (s:Serie {title: 'Coisas Ocultas'}), (g:Genre {name: 'Fantasia'}) CREATE (s)-[:IN_GENRE]->(s);
 
@@ -104,4 +100,5 @@ MATCH (s:Serie {title: 'Agentes do Caos'}), (g:Genre {name: 'Ação'}) CREATE (s
 
 MATCH (s:Serie {title: 'A Trilha da Coruja'}), (d:Director {name: 'Tim Burton'}) CREATE (d)-[:DIRECTED]->(s);
 MATCH (s:Serie {title: 'A Trilha da Coruja'}), (a:Actor {name: 'Yanca Rivska'}) CREATE (a)-[:ACTED_IN]->(s);
+
 MATCH (s:Serie {title: 'A Trilha da Coruja'}), (g:Genre {name: 'Fantasia'}) CREATE (s)-[:IN_GENRE]->(g);
